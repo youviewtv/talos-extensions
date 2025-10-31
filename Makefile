@@ -8,10 +8,11 @@ SHA := $(shell git describe --match=none --always --abbrev=8 --dirty)
 TAG := $(shell git describe --tag --always --dirty --match v[0-9]\*)
 ABBREV_TAG := $(shell git describe --tags >/dev/null 2>/dev/null && git describe --tag --always --match v[0-9]\* --abbrev=0 || echo 'undefined')
 BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+SED ?= sed
 ARTIFACTS := _out
 IMAGE_TAG ?= $(TAG)
 OPERATING_SYSTEM := $(shell uname -s | tr '[:upper:]' '[:lower:]')
-GOARCH := $(shell uname -m | sed 's/x86_64/amd64/' | sed 's/aarch64/arm64/')
+GOARCH := $(shell uname -m | $(SED) 's/x86_64/amd64/' | $(SED) 's/aarch64/arm64/')
 REGISTRY ?= ghcr.io
 USERNAME ?= siderolabs
 REGISTRY_AND_USERNAME ?= $(REGISTRY)/$(USERNAME)
@@ -127,6 +128,7 @@ TARGETS += xen-guest-agent
 TARGETS += youki
 TARGETS += zerotier
 TARGETS += zfs
+TARGETS += yvrig-control
 NONFREE_TARGETS = nonfree-kmod-nvidia-lts
 NONFREE_TARGETS += nonfree-kmod-nvidia-production
 
@@ -235,7 +237,7 @@ extensions: internal/extensions/descriptions.yaml
 .PHONY: extensions-catalog
 extensions-catalog: $(ARTIFACTS)/bldr
 	@$(ARTIFACTS)/bldr dump --build-arg TAG=VERSION --template hack/catalog.template > $(ARTIFACTS)/catalog.md 2>/dev/null
-	@lead='^<!-- ### BEGIN GENERATED CONTENT -->$$'; tail='^<!-- ### END GENERATED CONTENT -->$$'; sed -i -e "/$$lead/,/$$tail/{ /$$lead/{p; r $(ARTIFACTS)/catalog.md" -e "}; /$$tail/p; d }" README.md
+	@lead='^<!-- ### BEGIN GENERATED CONTENT -->$$'; tail='^<!-- ### END GENERATED CONTENT -->$$'; $(SED) -i -e "/$$lead/,/$$tail/{ /$$lead/{p; r $(ARTIFACTS)/catalog.md" -e "}; /$$tail/p; d }" README.md
 
 .PHONY: check-dirty
 check-dirty:
@@ -291,4 +293,3 @@ release-notes: $(ARTIFACTS)
 conformance:
 	@docker pull $(CONFORMANCE_IMAGE)
 	@docker run --rm -it -v $(PWD):/src -w /src $(CONFORMANCE_IMAGE) enforce
-
