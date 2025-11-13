@@ -1,6 +1,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED, PLEASE DO NOT EDIT.
 #
-# Generated on 2025-10-30T03:39:23Z by kres cd5a938.
+# Generated on 2025-11-12T17:46:46Z by kres 911d166.
 
 # common variables
 
@@ -25,7 +25,7 @@ SOURCE_DATE_EPOCH := $(shell git log $(INITIAL_COMMIT_SHA) --pretty=%ct)
 
 # sync bldr image with pkgfile
 
-BLDR_RELEASE := v0.5.4
+BLDR_RELEASE := v0.5.5
 BLDR_IMAGE := ghcr.io/siderolabs/bldr:$(BLDR_RELEASE)
 BLDR := docker run --rm --user $(shell id -u):$(shell id -g) --volume $(PWD):/src --entrypoint=/bldr $(BLDR_IMAGE) --root=/src
 
@@ -51,9 +51,9 @@ COMMON_ARGS += $(BUILD_ARGS)
 # extra variables
 
 EXTENSIONS_IMAGE_REF ?= $(REGISTRY_AND_USERNAME)/extensions:$(TAG)
-PKGS ?= v1.12.0-alpha.0-45-gda97c36
+PKGS ?= v1.12.0
 PKGS_PREFIX ?= ghcr.io/siderolabs
-TOOLS ?= v1.12.0-alpha.0-16-ga08cc1f
+TOOLS ?= v1.12.0
 TOOLS_PREFIX ?= ghcr.io/siderolabs
 IMAGE_SIGNER_RELEASE ?= v0.1.1
 
@@ -93,6 +93,7 @@ TARGETS += metal-agent
 TARGETS += nebula
 TARGETS += netbird
 TARGETS += newt
+TARGETS += nfs-utils
 TARGETS += nfsd
 TARGETS += nfsrahead
 TARGETS += nut-client
@@ -100,6 +101,7 @@ TARGETS += nvidia-container-toolkit-lts
 TARGETS += nvidia-container-toolkit-production
 TARGETS += nvidia-fabricmanager-lts
 TARGETS += nvidia-fabricmanager-production
+TARGETS += nvidia-gdrdrv-device
 TARGETS += nvidia-open-gpu-kernel-modules-lts
 TARGETS += nvidia-open-gpu-kernel-modules-production
 TARGETS += nvme-cli
